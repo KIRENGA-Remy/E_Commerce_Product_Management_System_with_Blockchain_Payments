@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     res.send("HERE WE GO");
 })
 app.use('/api/auth', authRoutes)
-app.use('/api/product', productRoutes)
+app.use('/api/products', productRoutes)
 app.use('/api/order', orderRoutes)
 
 const port = process.env.PORT

@@ -182,8 +182,8 @@ See .env.example files in both backend and frontend directories for required var
 Distributed under the MIT License. See LICENSE for more information.
 
 # Contact
-Your Name - gitoliremy@gmail.com
+Email - gitoliremy@gmail.com
 
 Project Link: https://github.com/KIRENGA-Remy/E_Commerce_Product_Management_System_with_Blockchain_Payments.git
 
-Happy coding!
+Happy coding! ❤️
