@@ -15,10 +15,8 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: 'Username or email already in use' });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Create user
     const user = await User.create({
       username,
       email,
@@ -34,7 +32,7 @@ export const register = async (req, res) => {
 
     res.status(201).json({ user, token });
   } catch (error) {
-    console.error('Error registering user:', error);
+    console.error('Error registering user: ', error);
     res.status(500).json({ error: 'Failed to register user' });
   }
 };
@@ -43,14 +41,12 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Find user by email
     const user = await User.findOne({ where: { email } });
     
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     
     if (!isPasswordValid) {

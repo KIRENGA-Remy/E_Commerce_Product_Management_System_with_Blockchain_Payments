@@ -1,5 +1,26 @@
-import { Product } from '../models'
+// import { Product } from '../models'
+import Product from '../models/product';
 import { Op } from 'sequelize'
+
+const createProduct = async (req, res) => {
+    try {
+      const { productName, price, description, stock } = req.body;
+      const imageUrl = req.file?.path || null;
+  
+      const product = await Product.create({
+        productName,
+        price,
+        description,
+        imageUrl,
+        stock
+      });
+  
+      res.status(201).json(product);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      res.status(500).json({ error: 'Failed to create product' });
+    }
+  };
 
 const getAllProducts = async (req, res) => {
   try {
@@ -8,7 +29,7 @@ const getAllProducts = async (req, res) => {
 
     const whereClause = search ? {
       [Op.or]: [
-        { name: { [Op.iLike]: `%${search}%` } },
+        { productName: { [Op.iLike]: `%${search}%` } },
         { description: { [Op.iLike]: `%${search}%` } }
       ]
     } : {};
@@ -45,26 +66,6 @@ const getProductById = async (req, res) => {
   }
 };
 
-const createProduct = async (req, res) => {
-  try {
-    const { name, price, description, stock } = req.body;
-    const imageUrl = req.file?.path || null;
-
-    const product = await Product.create({
-      name,
-      price,
-      description,
-      imageUrl,
-      stock
-    });
-
-    res.status(201).json(product);
-  } catch (error) {
-    console.error('Error creating product:', error);
-    res.status(500).json({ error: 'Failed to create product' });
-  }
-};
-
 const updateProduct = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
@@ -72,11 +73,11 @@ const updateProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    const { name, price, description, stock } = req.body;
+    const { productName, price, description, stock } = req.body;
     const imageUrl = req.file?.path || product.imageUrl;
 
     await product.update({
-      name: name || product.name,
+      productName: productName || product.productName,
       price: price || product.price,
       description: description || product.description,
       imageUrl,

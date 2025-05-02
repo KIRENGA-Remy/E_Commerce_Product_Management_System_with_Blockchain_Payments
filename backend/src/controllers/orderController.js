@@ -1,10 +1,16 @@
 import { Order, Product, User } from '../models'
 import bitcoinService from '../services/bitcoinService'
+import { convertToBTC } from '../utils/currency';
 
 const createOrder = async (req, res) => {
   try {
     const { productIds, quantities } = req.body;
     const userId = req.user.id;
+
+    // Validate input
+    if (!productIds || !quantities || productIds.length !== quantities.length) {
+        return res.status(400).json({ error: 'Invalid product IDs or quantities' });
+      }
 
     // Calculate total amount and verify products
     const products = await Product.findAll({
@@ -12,7 +18,11 @@ const createOrder = async (req, res) => {
     });
 
     if (products.length !== productIds.length) {
-      return res.status(400).json({ error: 'One or more products not found' });
+      const missingProducts = productIds.filter(id => !products.some(p => p.id === id));
+      return res.status(404).json({
+        error: 'Some products not found',
+        missingProducts
+      })
     }
 
     let totalAmount = 0;
@@ -20,7 +30,7 @@ const createOrder = async (req, res) => {
     
     products.forEach((product, index) => {
       if (product.stock < quantities[index]) {
-        throw new Error(`Insufficient stock for product ${product.name}`);
+        throw new Error(`Insufficient stock for product ${product.productName}`);
       }
       
       totalAmount += product.price * quantities[index];
@@ -33,7 +43,7 @@ const createOrder = async (req, res) => {
 
     // Generate Bitcoin payment address and amount
     const { address } = bitcoinService.generateAddress();
-    const bitcoinAmount = await convertToBTC(totalAmount); // Implement this function based on current exchange rate
+    const bitcoinAmount = await convertToBTC(totalAmount) // Implement this function based on current exchange rate
 
     // Create the order
     const order = await Order.create({
@@ -58,10 +68,21 @@ const createOrder = async (req, res) => {
       });
     }));
 
-    res.status(201).json(order);
+    res.status(201).json({
+        message: "Order created successfully",
+        order,
+        paymentInstructions: {
+            bitcoinAmount,
+            bitcoinAddress: address,
+            usdAmount: totalAmount
+        }
+    })
   } catch (error) {
     console.error('Error creating order:', error);
-    res.status(400).json({ error: error.message || 'Failed to create order' });
+    res.status(400).json({ 
+      error: error.message || 'Failed to create order',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 
