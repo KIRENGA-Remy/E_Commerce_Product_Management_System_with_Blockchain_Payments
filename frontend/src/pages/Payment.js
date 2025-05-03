@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import { toast } from 'react-toastify';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG as QRCode } from 'qrcode.react';
 import BitcoinService from '../services/BitcoinService';
 
 const Payment = () => {
@@ -57,8 +57,9 @@ const Payment = () => {
       }, 15000); // Check every 15 seconds
       
       setTimer(interval);
+      return () => clearInterval(interval);
     }
-  }, [paymentAddress, isPaid, orderId, navigate]);
+  }, [paymentAddress, isPaid, orderId, navigate, timer]);
 
   if (!order) return <div>Loading...</div>;
 

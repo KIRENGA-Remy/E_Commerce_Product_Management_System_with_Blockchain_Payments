@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 
 // Create axios instance with base URL and headers
 const api = axios.create({

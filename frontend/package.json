@@ -8,6 +8,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.9.0",
+    "bip32": "^5.0.0-rc.0",
     "bitcoinjs-lib": "^6.1.7",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
@@ -17,6 +18,7 @@
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.5",
+    "tiny-secp256k1": "^2.2.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

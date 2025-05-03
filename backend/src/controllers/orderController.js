@@ -1,5 +1,5 @@
 import { Order, Product, User } from '../models'
-import bitcoinService from '../services/bitcoinService'
+import bitcoinService from '../services/BitcoinService'
 import { convertToBTC } from '../utils/currency';
 
 const createOrder = async (req, res) => {

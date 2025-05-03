@@ -65,7 +65,7 @@ const ProductDetail = () => {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <img 
               src={product.imageUrl || '/placeholder-product.jpg'} 
-              alt={product.name}
+              alt={product.productName}
               className="w-full h-auto"
             />
           </div>

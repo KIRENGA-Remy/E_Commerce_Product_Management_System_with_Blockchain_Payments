@@ -37,11 +37,13 @@ const CreateProduct = () => {
       formDataToSend.append('stock', formData.stock);
       if (image) formDataToSend.append('image', image);
 
-      const response = await axios.post('/products', formDataToSend, {
+      const {data} = await axios.post('/products', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+      console.log(data);
+      
 
       toast.success('Product created successfully!');
       navigate('/admin');

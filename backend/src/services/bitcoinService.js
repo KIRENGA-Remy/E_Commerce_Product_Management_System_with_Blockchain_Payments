@@ -1,11 +1,12 @@
-import bitcoin from 'bitcoinjs-lib'
+import * as bitcoin from 'bitcoinjs-lib'
 import axios from 'axios'
 
 class BitCoinService{
-    constructor(networkType = 'testnet'){
-        this.network = networkType === 'testnet' ? bitcoin.networks.testnet : bitcoin.networks.bitcoin // use testnet for development or bitcoin for production
-        this.apiUrl = networkType === 'testnet' ? 'https://blockstream.info/testnet/api' : 'https://blockstream.info/api'
-    }
+    constructor() {
+        this.network = bitcoin.networks.testnet; // Use testnet for development
+        this.apiUrl = 'https://blockstream.info/testnet/api';
+      }
+      
     generateAddress(){
         const keyPair = bitcoin.ECPair.makeRandom({network: this.network});
         const { address} = bitcoin.payments.p2wpkh({
