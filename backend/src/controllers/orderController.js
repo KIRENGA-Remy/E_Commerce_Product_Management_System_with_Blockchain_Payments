@@ -1,8 +1,10 @@
-import { Order, Product, User } from '../models'
-import bitcoinService from '../services/BitcoinService'
-import { convertToBTC } from '../utils/currency';
+import Order from '../models/Order.js';
+import Product from '../models/Product.js';
+import User from '../models/User.js';
+import bitcoinService from '../services/BitcoinService.js'
+import { convertToBTC } from '../utils/currency.js';
 
-const createOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   try {
     const { productIds, quantities } = req.body;
     const userId = req.user.id;
@@ -86,7 +88,7 @@ const createOrder = async (req, res) => {
   }
 };
 
-const getOrder = async (req, res) => {
+export const getOrder = async (req, res) => {
   try {
     const order = await Order.findByPk(req.params.id, {
       include: [
@@ -111,7 +113,7 @@ const getOrder = async (req, res) => {
   }
 };
 
-const processBitcoinPayment = async (req, res) => {
+export const processBitcoinPayment = async (req, res) => {
   try {
     const order = await Order.findByPk(req.params.id);
     
@@ -145,7 +147,7 @@ const processBitcoinPayment = async (req, res) => {
   }
 };
 
-const getUserOrders = async (req, res) => {
+export const getUserOrders = async (req, res) => {
   try {
     const userId = req.params.userId;
     
@@ -169,9 +171,3 @@ const getUserOrders = async (req, res) => {
   }
 };
 
-export default {
-  createOrder,
-  getOrder,
-  processBitcoinPayment,
-  getUserOrders
-};

@@ -1,11 +1,16 @@
 import express from 'express';
-import orderController from '../controllers/orderController';
-import authMiddleware from '../middleware/authMiddleware';
+import {
+    createOrder, 
+    getOrder, 
+    processBitcoinPayment, 
+    getUserOrders
+} from '../controllers/orderController.js';
+import {authenticate} from '../middleware/authMiddleware.js';
 const router = express.Router();
 
-router.post('/', authMiddleware.authenticate, orderController.createOrder);
-router.get('/:id', authMiddleware.authenticate, orderController.getOrder);
-router.post('/:id/pay', authMiddleware.authenticate, orderController.processBitcoinPayment);
-router.get('/user/:userId', authMiddleware.authenticate, orderController.getUserOrders);
+router.post('/', authenticate, createOrder);
+router.get('/:id', authenticate, getOrder);
+router.post('/:id/pay', authenticate, processBitcoinPayment);
+router.get('/user/:userId', authenticate, getUserOrders);
 
 export default router;

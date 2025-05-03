@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
-import { User } from '../models'
+import User from '../models/User.js';
 
-const authenticate = async (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
@@ -23,14 +23,10 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
   if (req.user && req.user.role === 'admin') {
     return next();
   }
   res.status(403).json({ error: 'Admin access required' });
 };
 
-export default {
-  authenticate,
-  isAdmin
-};

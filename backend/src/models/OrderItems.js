@@ -1,24 +1,32 @@
-const OrderItems = (sequelize, DataTypes) => {
-    const OrderItemsModel = sequelize.define('OrderItem', {
-        quantity: {
-            type: DataTypes.INTEGER,
-            defaultValue: 1
-        },
-        price: {
-            type: DataTypes.DECIMAL(10, 2),
-            allowNull: false
-        }
+import { DataTypes } from 'sequelize';
+
+const OrderItems = (sequelize) => {
+  const model = sequelize.define('OrderItem', {
+    quantity: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+      validate: {
+        min: 1
+      }
     },
-    {
-        timestamps: false // Disable timestamps if not needed
-    });
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        min: 0.01
+      }
+    }
+  }, {
+    timestamps: false,
+    tableName: 'order_items'
+  });
 
-    OrderItemsModel.associate = models => {
-        OrderItemsModel.belongsTo(models.Order);
-        OrderItemsModel.belongsTo(models.Product);
-    };
+  model.associate = (models) => {
+    model.belongsTo(models.Order, { foreignKey: 'orderId' });
+    model.belongsTo(models.Product, { foreignKey: 'productId' });
+  };
 
-    return OrderItemsModel;
+  return model;
 };
 
 export default OrderItems;

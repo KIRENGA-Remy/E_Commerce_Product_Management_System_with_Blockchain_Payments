@@ -1,8 +1,7 @@
-// import { Product } from '../models'
-import Product from '../models/product';
+import Product from '../models/Product.js';
 import { Op } from 'sequelize'
 
-const createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
     try {
       const { productName, price, description, stock } = req.body;
       const imageUrl = req.file?.path || null;
@@ -22,7 +21,7 @@ const createProduct = async (req, res) => {
     }
   };
 
-const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
     const offset = (page - 1) * limit;
@@ -53,7 +52,7 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-const getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) {
@@ -66,7 +65,7 @@ const getProductById = async (req, res) => {
   }
 };
 
-const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) {
@@ -91,7 +90,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) {
@@ -106,10 +105,3 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-export default {
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct
-};

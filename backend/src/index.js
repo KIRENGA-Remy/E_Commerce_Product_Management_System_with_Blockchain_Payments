@@ -4,6 +4,7 @@ import cors from 'cors'
 import authRoutes from './routes/auth.js'
 import productRoutes from './routes/products.js'
 import orderRoutes from './routes/orders.js'
+import { testConnection} from './config/database.js'
 
 dotenv.config()
 const app = express()
@@ -17,6 +18,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/order', orderRoutes)
 
+await testConnection()
 const port = process.env.PORT
 
 app.listen(port, () => {
