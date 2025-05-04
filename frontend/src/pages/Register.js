@@ -23,6 +23,16 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.username || !formData.email || !formData.password) {
+        toast.error('All fields are required');
+        return;
+      }
+      if (formData.password.length < 8) {
+        toast.error('Password must be at least 8 characters');
+        return;
+      }
+    
     
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match');
@@ -30,17 +40,23 @@ const Register = () => {
     }
 
     setLoading(true);
-    const result = await register({
-      username: formData.username,
-      email: formData.email,
-      password: formData.password
-    });
-    setLoading(false);
-    
-    if (!result.success) {
-      toast.error(result.message);
-    }
-  };
+    try {
+        const result = await register({
+            username: formData.username.trim(),
+            email: formData.email.trim(),
+            password: formData.password
+          });
+          setLoading(false);
+          
+          if (!result.success) {
+            toast.error(result.message);
+          }
+        } catch (error) {
+            toast.error('An unexpected error occurred');
+          } finally {
+            setLoading(false);
+          }
+        };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

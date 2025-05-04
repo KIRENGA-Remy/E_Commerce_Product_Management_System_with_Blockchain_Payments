@@ -5,12 +5,12 @@ import { toast } from 'react-toastify';
 
 const CreateProduct = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    product_name: '',
     price: '',
     description: '',
     stock: ''
   });
-  const [image, setImage] = useState(null);
+  const [image_url, setImage_url] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -22,7 +22,13 @@ const CreateProduct = () => {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+        setImage_url(reader.result);
+    }
+    reader.readAsDataURL(file)
   };
 
   const handleSubmit = async (e) => {
@@ -31,20 +37,19 @@ const CreateProduct = () => {
     
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
+      formDataToSend.append('product_name', formData.product_name);
       formDataToSend.append('price', formData.price);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('stock', formData.stock);
-      if (image) formDataToSend.append('image', image);
+    //   if (image_url) formDataToSend.append('image_url', image_url);
+      formDataToSend.append('imageBase64', image_url.split(',')[1]);
 
       const {data} = await axios.post('/products', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(data);
       
-
       toast.success('Product created successfully!');
       navigate('/admin');
     } catch (error) {
@@ -60,16 +65,17 @@ const CreateProduct = () => {
       
       <form onSubmit={handleSubmit} className="max-w-2xl bg-white rounded-lg shadow-md p-6">
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="product_name">
             Product Name
           </label>
           <input
-            id="name"
-            name="name"
+            id="product_name"
+            name="product_name"
             type="text"
+            placeholder='Product name...'
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={formData.name}
+            className="shadow appearance-none border placeholder-gray-700 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={formData.product_name}
             onChange={handleChange}
           />
         </div>
@@ -82,10 +88,11 @@ const CreateProduct = () => {
             id="price"
             name="price"
             type="number"
+            placeholder='$...'
             step="0.01"
             min="0"
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border placeholder-gray-700 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={formData.price}
             onChange={handleChange}
           />
@@ -98,8 +105,9 @@ const CreateProduct = () => {
           <textarea
             id="description"
             name="description"
+            placeholder='Description...'
             rows="4"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none placeholder-gray-700 border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={formData.description}
             onChange={handleChange}
           />
@@ -113,21 +121,22 @@ const CreateProduct = () => {
             id="stock"
             name="stock"
             type="number"
+            placeholder='Stock...'
             min="0"
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border placeholder-gray-700 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             value={formData.stock}
             onChange={handleChange}
           />
         </div>
         
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image_url">
             Product Image
           </label>
           <input
-            id="image"
-            name="image"
+            id="image_url"
+            name="image_url"
             type="file"
             accept="image/*"
             className="block w-full text-sm text-gray-500

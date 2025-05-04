@@ -7,7 +7,7 @@ import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserDashboard from './pages/UserDashboard';
-import Payment from './pages/Payment';
+// import Payment from './pages/Payment';
 import AdminDashboard from './pages/admin/Dashboard'
 import CreateProduct from './pages/admin/CreateProduct';
 import ManageOrders from './pages/admin/ManageOrders';
@@ -29,7 +29,7 @@ export default function App() {
 
               {/* Protected user routes */}
               <Route path='/user' element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
-              <Route path='/payment/:orderId' element={<PrivateRoute><Payment /></PrivateRoute>} />
+              {/* <Route path='/payment/:orderId' element={<PrivateRoute><Payment /></PrivateRoute>} /> */}
 
               {/* Admin routes */}
               <Route path='/admin' element={<AdminRoute><AdminDashboard /></AdminRoute>} />

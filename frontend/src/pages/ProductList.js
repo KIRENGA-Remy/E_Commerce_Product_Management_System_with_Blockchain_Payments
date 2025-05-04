@@ -14,7 +14,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('/products');
+        const response = await axios.get('http://localhost:4321/api/products');
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -33,7 +33,7 @@ const ProductList = () => {
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className='text-indigo-600 hover:text-indigo-700 flex justify-center items-center text-sm'>Loading...</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -44,7 +44,7 @@ const ProductList = () => {
           <ProductCard 
             key={product.id} 
             product={product} 
-            onClick={() => navigate(`/products/${product.id}`)}
+            onClick={() => navigate(`/api/products/${product.id}`)}
           />
         ))}
       </div>

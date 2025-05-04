@@ -38,16 +38,27 @@ export function AuthProvider({ children }) {
       return { success: false, message: error.response?.data?.error || 'Login failed' };
     }
   };
-
   const register = async (userData) => {
     try {
       const response = await axios.post('/auth/register', userData);
-      localStorage.setItem('token', response.data.token);
-      setCurrentUser(response.data.user);
-      navigate('/user');
-      return { success: true };
+      
+      if (response.data.token && response.data.user) {
+        localStorage.setItem('token', response.data.token);
+        setCurrentUser(response.data.user);
+        navigate('/');
+        return { success: true };
+      }
+      return { 
+        success: false, 
+        message: response.data.error || 'Registration incomplete' 
+      };
     } catch (error) {
-      return { success: false, message: error.response?.data?.error || 'Registration failed' };
+      return { 
+        success: false, 
+        message: error.response?.data?.error || 
+                error.message || 
+                'Registration failed' 
+      };
     }
   };
 

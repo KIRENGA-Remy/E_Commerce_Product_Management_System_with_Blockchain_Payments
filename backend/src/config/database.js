@@ -31,20 +31,22 @@ const sequelize = new Sequelize(
 const testConnection = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Database connected successfully.');
+    console.log('\nDatabase connected successfully.\n');
+    return true;
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('\nUnable to connect to the database:', error);
     process.exit(1); 
   }
 };
 
-// Sync all models (optional - can be done separately)
+// Sync all models
 const syncModels = async () => {
   try {
-    await sequelize.sync({ alter: true }); // Use { force: true } to drop and recreate tables
-    console.log('All models were synchronized successfully.');
+    await sequelize.sync({ alter: true });
+    console.log('All models synchronized successfully.\n');
   } catch (error) {
-    console.error('Error synchronizing models:', error);
+    console.error('Model synchronization failed:', error);
+    process.exit(1);
   }
 };
 

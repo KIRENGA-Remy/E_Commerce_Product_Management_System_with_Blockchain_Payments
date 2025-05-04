@@ -3,14 +3,14 @@ import { Op } from 'sequelize'
 
 export const createProduct = async (req, res) => {
     try {
-      const { productName, price, description, stock } = req.body;
-      const imageUrl = req.file?.path || null;
+      const { product_name, price, description, stock, imageBase64 } = req.body;
+      // const image_url = req.file?.path || null;
   
       const product = await Product.create({
-        productName,
+        product_name,
         price,
         description,
-        imageUrl,
+        image_url: imageBase64 ? `data:image/png;base64,${imageBase64}` : null,
         stock
       });
   
@@ -28,7 +28,7 @@ export const getAllProducts = async (req, res) => {
 
     const whereClause = search ? {
       [Op.or]: [
-        { productName: { [Op.iLike]: `%${search}%` } },
+        { product_name: { [Op.iLike]: `%${search}%` } },
         { description: { [Op.iLike]: `%${search}%` } }
       ]
     } : {};
@@ -72,14 +72,14 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    const { productName, price, description, stock } = req.body;
-    const imageUrl = req.file?.path || product.imageUrl;
+    const { product_name, price, description, stock } = req.body;
+    const image_url = req.file?.path || product.image_url;
 
     await product.update({
-      productName: productName || product.productName,
+      product_name: product_name || product.product_name,
       price: price || product.price,
       description: description || product.description,
-      imageUrl,
+      image_url,
       stock: stock || product.stock
     });
 

@@ -11,7 +11,6 @@ const Payment = () => {
   const [order, setOrder] = useState(null);
   const [paymentAddress, setPaymentAddress] = useState('');
   const [isPaid, setIsPaid] = useState(false);
-  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -19,7 +18,6 @@ const Payment = () => {
         const response = await axios.get(`/orders/${orderId}`);
         setOrder(response.data);
         
-        // Generate or use existing Bitcoin address
         if (!response.data.bitcoinAddress) {
           const { address } = BitcoinService.generateAddress();
           await axios.put(`/orders/${orderId}`, { bitcoinAddress: address });
@@ -34,32 +32,31 @@ const Payment = () => {
     };
 
     fetchOrder();
-
-    return () => {
-      if (timer) clearInterval(timer);
-    };
   }, [orderId]);
 
   useEffect(() => {
+    let interval;
+    
     if (paymentAddress && !isPaid) {
-      const interval = setInterval(async () => {
+      interval = setInterval(async () => {
         try {
           const response = await axios.get(`/orders/${orderId}/check-payment`);
           if (response.data.isPaid) {
             setIsPaid(true);
             clearInterval(interval);
-            toast.success('Payment confirmed! Your order is being processed.');
+            toast.success('Payment confirmed!');
             navigate('/orders');
           }
         } catch (error) {
           console.error('Error checking payment:', error);
         }
-      }, 15000); // Check every 15 seconds
-      
-      setTimer(interval);
-      return () => clearInterval(interval);
+      }, 15000);
     }
-  }, [paymentAddress, isPaid, orderId, navigate, timer]);
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [paymentAddress, isPaid, orderId, navigate]);
 
   if (!order) return <div>Loading...</div>;
 

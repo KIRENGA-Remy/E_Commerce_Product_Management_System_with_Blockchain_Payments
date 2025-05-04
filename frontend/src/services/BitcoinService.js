@@ -47,7 +47,6 @@
 
 
 
-// src/services/BitcoinService.js
 import * as bitcoin from 'bitcoinjs-lib';
 import axios from 'axios';
 import * as ecc from 'tiny-secp256k1';
@@ -98,4 +97,5 @@ class BitcoinService {
   }
 }
 
-export default new BitcoinService();
+const bitcoinService = new BitcoinService();
+export default bitcoinService

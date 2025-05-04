@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 
 const Product = (sequelize) => {
   return sequelize.define('Product', {
-    productName: {
+    product_name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -23,7 +23,7 @@ const Product = (sequelize) => {
         len: [0, 2000]
       }
     },
-    imageUrl: {
+    image_url: {
       type: DataTypes.STRING,
       validate: {
         isUrl: true
@@ -39,7 +39,7 @@ const Product = (sequelize) => {
   }, {
     timestamps: false,
     tableName: 'products',
-    underscored: true // Optional: for snake_case column names
+    underscored: true 
   });
 };
 
